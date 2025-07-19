@@ -1,0 +1,36 @@
+{
+  "default": {
+    "name": "default",
+    "description": "Default conversational agent with basic tools",
+    "agent_type": "react",
+    "llm": {
+      "model": "llama3-8b-8192",
+      "provider": "groq",
+      "api_key": null,
+      "temperature": 0.7,
+      "max_tokens": 1024,
+      "top_p": 0.9,
+      "top_k": null,
+      "server_url": "http://localhost:8000"
+    },
+    "system_prompt": "You are a helpful AI assistant. Use the available tools to help the user with their requests.",
+    "tools": [
+      {
+        "name": "calculator",
+        "type": "calculator",
+        "description": "Perform mathematical calculations",
+        "enabled": true,
+        "config": {}
+      }
+    ],
+    "memory": {
+      "type": "buffer",
+      "max_tokens": 2000,
+      "summary_prompt": null,
+      "vector_store_config": null
+    },
+    "max_iterations": 10,
+    "timeout": 300,
+    "metadata": {}
+  }
+}

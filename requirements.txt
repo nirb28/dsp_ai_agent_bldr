@@ -1,0 +1,26 @@
+fastapi
+uvicorn
+pydantic
+python-multipart==0.0.6
+python-jose==3.3.0
+passlib==1.7.4
+httpx
+python-dotenv==1.0.0
+requests==2.31.0
+aiofiles==23.2.1
+httpx==0.25.2
+
+# LLM and embedding services
+langchain
+langgraph
+groq
+openai
+pydantic
+python-dotenv
+langchain-groq
+langchain-community
+langchain-openai
+
+# Testing
+pytest==7.4.4
+pytest-asyncio==0.21.1
