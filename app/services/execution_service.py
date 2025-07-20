@@ -28,7 +28,9 @@ class ExecutionService:
     
     def _create_llm(self, config: AgentConfig):
         """Create LLM instance based on configuration"""
+        import os
         llm_config = config.llm
+        include_max_tokens = os.getenv("INCLUDE_MAX_TOKENS", "true").lower() == "true"
         
         if llm_config.provider == LLMProvider.GROQ:
             return ChatGroq(
@@ -47,14 +49,16 @@ class ExecutionService:
                 openai_api_key=llm_config.api_key
             )
         elif llm_config.provider == LLMProvider.OPENAI_COMPATIBLE:
-            return ChatOpenAI(
-                model=llm_config.model,
-                temperature=llm_config.temperature,
-                max_tokens=llm_config.max_tokens,
-                top_p=llm_config.top_p,
-                openai_api_key=llm_config.api_key or "dummy",
-                openai_api_base=llm_config.server_url
-            )
+            kwargs = {
+                "model": llm_config.model,
+                "temperature": llm_config.temperature,
+                "openai_api_key": llm_config.api_key or "dummy",
+                "openai_api_base": llm_config.server_url,
+                "top_p": llm_config.top_p                
+            }
+            if include_max_tokens:
+                kwargs["max_tokens"] = llm_config.max_tokens
+            return ChatOpenAI(**kwargs)
         else:
             raise ValueError(f"Unsupported LLM provider: {llm_config.provider}")
     
