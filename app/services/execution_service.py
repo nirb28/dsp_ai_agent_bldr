@@ -89,19 +89,28 @@ class ExecutionService:
             messages = state["messages"]
             
             # Add system message if not present
-            if not messages or messages[0].get("role") != "system":
+            if not messages or (isinstance(messages[0], dict) and messages[0].get("role") != "system"):
                 system_msg = {"role": "system", "content": config.system_prompt}
                 messages = [system_msg] + messages
             
             # Convert to LangChain message format
             lc_messages = []
             for msg in messages:
-                if msg["role"] == "system":
-                    lc_messages.append(SystemMessage(content=msg["content"]))
-                elif msg["role"] == "user":
-                    lc_messages.append(HumanMessage(content=msg["content"]))
-                elif msg["role"] == "assistant":
-                    lc_messages.append(AIMessage(content=msg["content"]))
+                # Handle if message is already a LangChain message object
+                if isinstance(msg, SystemMessage):
+                    lc_messages.append(msg)
+                elif isinstance(msg, HumanMessage):
+                    lc_messages.append(msg)
+                elif isinstance(msg, AIMessage):
+                    lc_messages.append(msg)
+                # Handle dictionary format messages
+                elif isinstance(msg, dict):
+                    if msg.get("role") == "system":
+                        lc_messages.append(SystemMessage(content=msg["content"]))
+                    elif msg.get("role") == "user":
+                        lc_messages.append(HumanMessage(content=msg["content"]))
+                    elif msg.get("role") == "assistant":
+                        lc_messages.append(AIMessage(content=msg["content"]))
             
             # Get response from LLM
             response = llm.invoke(lc_messages)
@@ -182,9 +191,21 @@ class ExecutionService:
             
             # Extract final response
             if "messages" in result and result["messages"]:
-                final_response = result["messages"][-1].get("content", "No response")
+                last_message = result["messages"][-1]
+                # Handle both dict and AIMessage formats
+                if isinstance(last_message, dict):
+                    final_response = last_message.get("content", "No response")
+                elif hasattr(last_message, "content"):
+                    # Handle LangChain message objects (AIMessage, etc.)
+                    final_response = last_message.content
+                else:
+                    final_response = str(last_message)
             else:
-                final_response = str(result.get("output", "No response"))
+                # Handle result output
+                if isinstance(result, dict):
+                    final_response = str(result.get("output", "No response"))
+                else:
+                    final_response = str(result)
             
             # Update execution
             execution.end_time = datetime.now()

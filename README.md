@@ -43,6 +43,16 @@ A comprehensive platform for creating, managing, and executing AI agents using L
 git clone <repository-url>
 cd dsp_ai_agent_bldr
 
+## Environment Variable Substitution in Configuration
+
+You can reference environment variables in `agent_configurations.json` using the syntax `${ENV_VAR_NAME}`. At runtime, these will be replaced by the value from your `.env` file or system environment.
+
+**Example:**
+```json
+"api_key": "${GROQ_API_KEY}"
+```
+This will use the value of `GROQ_API_KEY` from your environment.
+
 # Install dependencies
 pip install -r requirements.txt
 
@@ -127,9 +137,9 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ```bash
 curl -X POST "http://localhost:3000/api/v1/agents" -H "Content-Type: application/json" -d '{
-    "name": "calculator_bot",
+    "name": "calculator_bot1",
     "config": {
-      "name": "calculator_bot",
+      "name": "calculator_bot1",
       "description": "A calculator agent",
       "agent_type": "react",
       "tools": [
@@ -276,18 +286,3 @@ dsp_ai_agent_bldr/
 └── README.md               # This file
 ```
 
-## Contributing
-
-1. Fork the repository
-2. Create a feature branch
-3. Make your changes
-4. Add tests for new functionality
-5. Submit a pull request
-
-## License
-
-This project is licensed under the MIT License.
-
-## Support
-
-For questions and support, please open an issue in the repository.
