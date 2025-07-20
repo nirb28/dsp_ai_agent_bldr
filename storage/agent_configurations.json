@@ -32,5 +32,262 @@
     "max_iterations": 10,
     "timeout": 300,
     "metadata": {}
+  },
+  "calculator_agent": {
+    "name": "calculator_agent",
+    "description": "A specialized agent for mathematical calculations and problem solving",
+    "agent_type": "react",
+    "llm": {
+      "model": "llama3-8b-8192",
+      "provider": "groq",
+      "api_key": null,
+      "temperature": 0.1,
+      "max_tokens": 1024,
+      "top_p": 0.9,
+      "top_k": null,
+      "server_url": "http://localhost:8000"
+    },
+    "system_prompt": "You are a mathematical assistant specialized in solving calculations and math problems. \n    Always use the calculator tool for any mathematical operations. Provide step-by-step explanations for complex problems.",
+    "tools": [
+      {
+        "name": "calculator",
+        "type": "calculator",
+        "description": "Perform mathematical calculations",
+        "enabled": true,
+        "config": {}
+      }
+    ],
+    "memory": {
+      "type": "buffer",
+      "max_tokens": 1000,
+      "summary_prompt": null,
+      "vector_store_config": null
+    },
+    "max_iterations": 10,
+    "timeout": 300,
+    "metadata": {}
+  },
+  "research_assistant": {
+    "name": "research_assistant",
+    "description": "An agent that can search the web and read files for research tasks",
+    "agent_type": "react",
+    "llm": {
+      "model": "llama3-70b-8192",
+      "provider": "groq",
+      "api_key": null,
+      "temperature": 0.7,
+      "max_tokens": 2048,
+      "top_p": 0.9,
+      "top_k": null,
+      "server_url": "http://localhost:8000"
+    },
+    "system_prompt": "You are a research assistant that helps users find and analyze information. \n    Use web search to find current information and file reading capabilities to analyze documents. \n    Always cite your sources and provide comprehensive, well-structured responses.",
+    "tools": [
+      {
+        "name": "web_search",
+        "type": "web_search",
+        "description": "Search the web for information",
+        "enabled": true,
+        "config": {
+          "max_results": 5
+        }
+      },
+      {
+        "name": "file_reader",
+        "type": "file_reader",
+        "description": "Read and analyze text files",
+        "enabled": true,
+        "config": {}
+      },
+      {
+        "name": "calculator",
+        "type": "calculator",
+        "description": "Perform calculations if needed",
+        "enabled": true,
+        "config": {}
+      }
+    ],
+    "memory": {
+      "type": "summary",
+      "max_tokens": 3000,
+      "summary_prompt": null,
+      "vector_store_config": null
+    },
+    "max_iterations": 10,
+    "timeout": 300,
+    "metadata": {}
+  },
+  "api_integration_agent": {
+    "name": "api_integration_agent",
+    "description": "An agent specialized in making API calls and integrating with external services",
+    "agent_type": "tool_calling",
+    "llm": {
+      "model": "gpt-4",
+      "provider": "openai",
+      "api_key": null,
+      "temperature": 0.3,
+      "max_tokens": 1500,
+      "top_p": 0.9,
+      "top_k": null,
+      "server_url": "http://localhost:8000"
+    },
+    "system_prompt": "You are an API integration specialist. You can make HTTP requests to various APIs \n    and help users integrate with external services. Always validate API responses and handle errors gracefully. \n    Provide clear explanations of API interactions and results.",
+    "tools": [
+      {
+        "name": "api_caller",
+        "type": "api_caller",
+        "description": "Make HTTP API calls",
+        "enabled": true,
+        "config": {
+          "timeout": 30,
+          "max_retries": 3
+        }
+      },
+      {
+        "name": "calculator",
+        "type": "calculator",
+        "description": "Calculate values for API parameters",
+        "enabled": true,
+        "config": {}
+      }
+    ],
+    "memory": {
+      "type": "buffer",
+      "max_tokens": 2000,
+      "summary_prompt": null,
+      "vector_store_config": null
+    },
+    "max_iterations": 10,
+    "timeout": 300,
+    "metadata": {}
+  },
+  "conversational_assistant": {
+    "name": "conversational_assistant",
+    "description": "A friendly conversational agent for general assistance and chat",
+    "agent_type": "conversational",
+    "llm": {
+      "model": "mixtral-8x7b-32768",
+      "provider": "groq",
+      "api_key": null,
+      "temperature": 0.8,
+      "max_tokens": 1024,
+      "top_p": 0.9,
+      "top_k": null,
+      "server_url": "http://localhost:8000"
+    },
+    "system_prompt": "You are a helpful and friendly AI assistant. You can engage in natural conversation \n    and help with a variety of tasks. Be personable, empathetic, and provide helpful responses. \n    Use tools when necessary to provide accurate information.",
+    "tools": [
+      {
+        "name": "calculator",
+        "type": "calculator",
+        "description": "Help with calculations",
+        "enabled": true,
+        "config": {}
+      },
+      {
+        "name": "web_search",
+        "type": "web_search",
+        "description": "Search for current information",
+        "enabled": false,
+        "config": {}
+      }
+    ],
+    "memory": {
+      "type": "buffer",
+      "max_tokens": 2500,
+      "summary_prompt": null,
+      "vector_store_config": null
+    },
+    "max_iterations": 10,
+    "timeout": 300,
+    "metadata": {}
+  },
+  "code_assistant": {
+    "name": "code_assistant",
+    "description": "An agent specialized in code analysis, execution, and programming help",
+    "agent_type": "planning",
+    "llm": {
+      "model": "llama3-70b-8192",
+      "provider": "groq",
+      "api_key": null,
+      "temperature": 0.2,
+      "max_tokens": 3000,
+      "top_p": 0.9,
+      "top_k": null,
+      "server_url": "http://localhost:8000"
+    },
+    "system_prompt": "You are a programming assistant that can help with code analysis, debugging, \n    and execution. You can read code files, execute code safely, and provide programming guidance. \n    Always explain your code suggestions and follow best practices.",
+    "tools": [
+      {
+        "name": "code_executor",
+        "type": "code_executor",
+        "description": "Execute code safely",
+        "enabled": true,
+        "config": {
+          "allowed_languages": [
+            "python",
+            "javascript"
+          ],
+          "timeout": 10
+        }
+      },
+      {
+        "name": "file_reader",
+        "type": "file_reader",
+        "description": "Read code files",
+        "enabled": true,
+        "config": {}
+      },
+      {
+        "name": "calculator",
+        "type": "calculator",
+        "description": "Calculate algorithmic complexity or numerical results",
+        "enabled": true,
+        "config": {}
+      }
+    ],
+    "memory": {
+      "type": "vector",
+      "max_tokens": 4000,
+      "summary_prompt": null,
+      "vector_store_config": null
+    },
+    "max_iterations": 10,
+    "timeout": 300,
+    "metadata": {}
+  },
+  "calculator_bot": {
+    "name": "calculator_bot",
+    "description": "A calculator agent",
+    "agent_type": "react",
+    "llm": {
+      "model": "llama3-8b-8192",
+      "provider": "groq",
+      "api_key": null,
+      "temperature": 0.7,
+      "max_tokens": 1024,
+      "top_p": 0.9,
+      "top_k": null,
+      "server_url": "http://localhost:8000"
+    },
+    "system_prompt": "You are a helpful AI assistant. Use the available tools to help the user.",
+    "tools": [
+      {
+        "name": "calculator",
+        "type": "calculator",
+        "description": "Perform calculations",
+        "enabled": true,
+        "config": {}
+      }
+    ],
+    "memory": {
+      "type": "buffer",
+      "max_tokens": 2000,
+      "summary_prompt": null,
+      "vector_store_config": null
+    },
+    "max_iterations": 10,
+    "timeout": 300,
+    "metadata": {}
   }
 }

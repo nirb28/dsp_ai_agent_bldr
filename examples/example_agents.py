@@ -2,6 +2,11 @@
 Example agent configurations for the Agent as a Service Platform
 """
 
+import os
+import sys
+# Add the project root to the Python path
+sys.path.insert(0, os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
+
 from app.config import AgentConfig, LLMConfig, ToolConfig, MemoryConfig, AgentType, ToolType, MemoryType, LLMProvider
 
 # Example 1: Simple Calculator Agent

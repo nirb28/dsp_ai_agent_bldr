@@ -71,9 +71,9 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 
 ### 4. Access the API
 
-- **API Documentation**: http://localhost:8000/docs
-- **Health Check**: http://localhost:8000/health
-- **Agent List**: http://localhost:8000/api/v1/agents
+- **API Documentation**: http://localhost:3000/docs
+- **Health Check**: http://localhost:3000/health
+- **Agent List**: http://localhost:3000/api/v1/agents
 
 ## Agent Configuration
 
@@ -126,9 +126,7 @@ uvicorn main:app --host 0.0.0.0 --port 8000 --reload
 ### Create an Agent
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/agents" \
-  -H "Content-Type: application/json" \
-  -d '{
+curl -X POST "http://localhost:3000/api/v1/agents" -H "Content-Type: application/json" -d '{
     "name": "calculator_bot",
     "config": {
       "name": "calculator_bot",
@@ -149,7 +147,7 @@ curl -X POST "http://localhost:8000/api/v1/agents" \
 ### Execute an Agent
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/agents/calculator_bot/execute" \
+curl -X POST "http://localhost:3000/api/v1/agents/calculator_bot/execute" \
   -H "Content-Type: application/json" \
   -d '{
     "agent_name": "calculator_bot",
@@ -165,7 +163,7 @@ curl -X POST "http://localhost:8000/api/v1/agents/calculator_bot/execute" \
 ### CopilotKit Integration
 
 ```bash
-curl -X POST "http://localhost:8000/api/v1/copilotkit/chat" \
+curl -X POST "http://localhost:3000/api/v1/copilotkit/chat" \
   -H "Content-Type: application/json" \
   -d '{
     "messages": [
