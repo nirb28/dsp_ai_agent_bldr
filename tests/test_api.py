@@ -24,7 +24,7 @@ def test_root_endpoint(client):
     assert response.status_code == 200
     data = response.json()
     assert "message" in data
-    assert "Agent as a Service Platform" in data["message"]
+    assert "Agent Platform" in data["message"]
 
 def test_health_endpoint(client):
     """Test the health endpoint"""

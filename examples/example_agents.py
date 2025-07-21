@@ -1,5 +1,5 @@
 """
-Example agent configurations for the Agent as a Service Platform
+Example agent configurations for the Agent Platform
 """
 
 import os

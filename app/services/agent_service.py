@@ -6,6 +6,7 @@ from datetime import datetime
 
 from app.config import AgentConfig, settings, process_env_vars_in_model
 from app.models.agent_models import AgentMetrics
+from app.services.mcp_service import MCPService
 
 logger = logging.getLogger(__name__)
 
@@ -15,6 +16,7 @@ class AgentService:
     def __init__(self):
         self.configurations: Dict[str, AgentConfig] = {}
         self.metrics: Dict[str, AgentMetrics] = {}
+        self.mcp_service = MCPService()
         self._load_configurations()
         self._load_metrics()
     
@@ -319,3 +321,25 @@ class AgentService:
     def get_metrics(self, agent_name: str) -> Optional[AgentMetrics]:
         """Get metrics for an agent"""
         return self.metrics.get(agent_name)
+    
+    def get_mcp_service(self) -> MCPService:
+        """Get the MCP service instance"""
+        return self.mcp_service
+    
+    def get_available_mcp_servers(self) -> List[str]:
+        """Get list of available MCP server names"""
+        return self.mcp_service.get_server_names()
+    
+    def get_mcp_server_info(self, server_name: str) -> Optional[Dict[str, Any]]:
+        """Get information about an MCP server"""
+        server_info = self.mcp_service.get_server(server_name)
+        if server_info:
+            return {
+                "config": server_info.config.dict(),
+                "status": server_info.status.value,
+                "available_tools": server_info.available_tools,
+                "available_resources": server_info.available_resources,
+                "last_health_check": server_info.last_health_check.isoformat() if server_info.last_health_check else None,
+                "error_message": server_info.error_message
+            }
+        return None

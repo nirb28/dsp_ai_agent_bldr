@@ -1,4 +1,4 @@
-# Agent as a Service Platform
+# Agent Platform
 
 A comprehensive platform for creating, managing, and executing AI agents using LangGraph, FastAPI, and CopilotKit. This platform provides a flexible architecture for building intelligent agents with various capabilities, memory systems, and tool integrations.
 

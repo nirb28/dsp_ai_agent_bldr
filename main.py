@@ -19,18 +19,18 @@ logger = logging.getLogger(__name__)
 async def lifespan(app: FastAPI):
     """Application lifespan events"""
     # Startup
-    logger.info("Starting Agent as a Service Platform")
+    logger.info("Starting Agent Platform")
     logger.info(f"Debug mode: {settings.DEBUG}")
     logger.info(f"Storage path: {settings.STORAGE_PATH}")
     
     yield
     
     # Shutdown
-    logger.info("Shutting down Agent as a Service Platform")
+    logger.info("Shutting down Agent Platform")
 
 # Create FastAPI app
 app = FastAPI(
-    title="Agent as a Service Platform",
+    title="Agent Platform",
     description="A platform for creating, managing, and executing AI agents using LangGraph, FastAPI, and CopilotKit",
     version="1.0.0",
     lifespan=lifespan
@@ -62,7 +62,7 @@ async def global_exception_handler(request: Request, exc: Exception):
 async def root():
     """Root endpoint with API information"""
     return {
-        "message": "Agent as a Service Platform",
+        "message": "Agent Platform",
         "version": "1.0.0",
         "docs": "/docs",
         "health": "/api/v1/health",
@@ -77,7 +77,7 @@ async def health():
     return {
         "status": "healthy",
         "version": "1.0.0",
-        "platform": "Agent as a Service"
+        "platform": "Agent Platform"
     }
 
 if __name__ == "__main__":

@@ -76,6 +76,7 @@ class ToolType(str, Enum):
     API_CALLER = "api_caller"
     DATABASE_QUERY = "database_query"
     EMAIL_SENDER = "email_sender"
+    MCP = "mcp"  # MCP server tool
     CUSTOM = "custom"
 
 class MemoryType(str, Enum):
@@ -85,6 +86,21 @@ class MemoryType(str, Enum):
     SUMMARY = "summary"  # Summarized conversation history
     VECTOR = "vector"  # Vector-based memory
     ENTITY = "entity"  # Entity-based memory
+
+class MCPTransport(str, Enum):
+    """MCP transport protocols"""
+    HTTP = "http"
+    STREAMABLE_HTTP = "streamable-http"
+    STDIO = "stdio"
+    SSE = "sse"
+
+class MCPServerStatus(str, Enum):
+    """MCP server status"""
+    STOPPED = "stopped"
+    STARTING = "starting"
+    RUNNING = "running"
+    ERROR = "error"
+    UNKNOWN = "unknown"
 
 # Common model names for reference
 COMMON_MODELS = {
@@ -113,6 +129,30 @@ class LLMConfig(BaseModel):
             raise ValueError(f"Invalid provider: {self.provider}")
         return self
 
+class MCPServerConfig(BaseModel):
+    """Configuration for an MCP server"""
+    name: str = Field(description="Server name (unique identifier)")
+    display_name: str = Field(description="Human-readable server name")
+    description: str = Field(description="Description of what the server provides")
+    transport: MCPTransport = Field(default=MCPTransport.HTTP, description="Transport protocol")
+    host: str = Field(default="localhost", description="Server host")
+    port: int = Field(default=8000, ge=1, le=65535, description="Server port")
+    base_url: Optional[str] = Field(default=None, description="Base URL for HTTP transport")
+    command: Optional[str] = Field(default=None, description="Command to start server (for stdio)")
+    args: List[str] = Field(default_factory=list, description="Command arguments")
+    env: Dict[str, str] = Field(default_factory=dict, description="Environment variables")
+    enabled: bool = Field(default=True, description="Whether the server is enabled")
+    auto_start: bool = Field(default=False, description="Whether to auto-start the server")
+    timeout: int = Field(default=30, ge=5, le=300, description="Connection timeout in seconds")
+    metadata: Dict[str, Any] = Field(default_factory=dict, description="Additional metadata")
+    
+    @property
+    def url(self) -> str:
+        """Get the full URL for HTTP-based transports"""
+        if self.base_url:
+            return self.base_url
+        return f"http://{self.host}:{self.port}"
+
 class ToolConfig(BaseModel):
     """Configuration for a tool"""
     name: str = Field(description="Tool name")
@@ -120,6 +160,9 @@ class ToolConfig(BaseModel):
     description: str = Field(description="Description of what the tool does")
     enabled: bool = Field(default=True, description="Whether the tool is enabled")
     config: Dict[str, Any] = Field(default_factory=dict, description="Tool-specific configuration")
+    # MCP-specific fields
+    mcp_server: Optional[str] = Field(default=None, description="MCP server name (for MCP tools)")
+    mcp_tool_name: Optional[str] = Field(default=None, description="MCP tool name (for MCP tools)")
     
 class MemoryConfig(BaseModel):
     """Configuration for agent memory"""
@@ -139,6 +182,7 @@ class AgentConfig(BaseModel):
         description="System prompt for the agent"
     )
     tools: List[ToolConfig] = Field(default_factory=list, description="Available tools")
+    mcp_servers: List[str] = Field(default_factory=list, description="MCP server names to use")
     memory: MemoryConfig = Field(default_factory=MemoryConfig, description="Memory configuration")
     max_iterations: int = Field(default=10, ge=1, le=50, description="Maximum iterations for agent execution")
     timeout: int = Field(default=300, ge=30, le=1800, description="Timeout in seconds")
@@ -167,10 +211,14 @@ class Settings:
     DEBUG: bool = os.getenv("DEBUG", "True").lower() == "true"
     STORAGE_PATH: str = os.getenv("STORAGE_PATH", "./storage")
     AGENT_CONFIGS_FILE: str = os.getenv("AGENT_CONFIGS_FILE", "agent_configurations.json")
+    MCP_SERVERS_FILE: str = os.getenv("MCP_SERVERS_FILE", "mcp_servers.json")
     MODEL_SERVER_URL: str = os.getenv("MODEL_SERVER_URL", "http://localhost:9001")
     TRITON_SERVER_URL: str = os.getenv("TRITON_SERVER_URL", "http://localhost:8001")
     DEFAULT_TEMPERATURE: float = float(os.getenv("DEFAULT_TEMPERATURE", "0.7"))
     DEFAULT_MAX_TOKENS: int = int(os.getenv("DEFAULT_MAX_TOKENS", "1024"))
     DEFAULT_TOP_P: float = float(os.getenv("DEFAULT_TOP_P", "0.9"))
+    # MCP settings
+    MCP_SERVERS_DIR: str = os.getenv("MCP_SERVERS_DIR", "./mcp_servers")
+    MCP_DEFAULT_TIMEOUT: int = int(os.getenv("MCP_DEFAULT_TIMEOUT", "30"))
 
 settings = Settings()

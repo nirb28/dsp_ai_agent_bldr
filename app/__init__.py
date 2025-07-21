@@ -1,1 +1,1 @@
-# Agent as a Service Platform
+# Agent Platform

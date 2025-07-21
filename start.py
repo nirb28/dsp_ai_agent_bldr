@@ -1,6 +1,6 @@
 #!/usr/bin/env python3
 """
-Startup script for the Agent as a Service Platform
+Startup script for the Agent Platform
 """
 
 import os
@@ -59,7 +59,7 @@ def create_example_agents():
 
 def main():
     """Main startup function"""
-    print("🚀 Starting Agent as a Service Platform")
+    print("🚀 Starting Agent Platform")
     print("=" * 50)
     
     # Check dependencies
