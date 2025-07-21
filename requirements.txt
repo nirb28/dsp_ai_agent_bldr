@@ -18,10 +18,6 @@ openai
 pydantic
 python-dotenv
 langchain-groq
-
-# MCP (Model Context Protocol) dependencies
-# Note: These are for the MCP server implementations
-# The MCP client functionality is built into the project
 langchain-community
 langchain-openai
 
