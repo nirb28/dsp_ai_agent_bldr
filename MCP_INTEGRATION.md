@@ -39,9 +39,9 @@ External APIs/Data Sources
 - Factory for creating tools from MCP servers
 
 ### 3. MCP Servers (`mcp_servers/`)
-- **Weather Server** (`weather-server/`): Weather information and forecasts
-- **Memory Server** (`memory-server/`): Persistent memory and knowledge storage
-- **Calculator Server** (`calculator-server/`): Mathematical calculations and statistics
+- **Weather Server** (`weather_server/`): Weather information and forecasts
+- **Memory Server** (`memory_server/`): Persistent memory and knowledge storage
+- **Calculator Server** (`calculator_server/`): Mathematical calculations and statistics
 
 ### 4. API Endpoints (`app/api/mcp_routes.py`)
 - REST API for managing MCP servers
@@ -351,6 +351,99 @@ await mcp_service.discover_capabilities("weather")
 server_info = mcp_service.get_server("weather")
 print(f"Available tools: {server_info.available_tools}")
 ```
+
+## RAG Integration
+
+The RAG MCP server provides seamless integration with your existing RAG service for document retrieval and question answering.
+
+### Prerequisites
+
+1. **RAG Service**: Your RAG service must be running on `localhost:9000`
+2. **Document Indexing**: Have documents indexed in your RAG configurations
+3. **Environment Variables**: Set `RAG_SERVICE_URL` if using a different URL
+
+### Starting the RAG MCP Server
+
+```bash
+# Start RAG MCP server individually
+python mcp_servers/start_rag_server.py
+
+# Or start all servers including RAG
+python mcp_servers/start_all_servers.py
+```
+
+### Using RAG Tools in Agents
+
+```python
+# Example agent configuration with RAG tools
+{
+  "name": "research_agent",
+  "mcp_servers": ["rag"],
+  "tools": [
+    {
+      "name": "retrieve_documents",
+      "type": "mcp",
+      "config": {
+        "server_name": "rag",
+        "tool_name": "retrieve_documents"
+      }
+    },
+    {
+      "name": "query_with_generation",
+      "type": "mcp",
+      "config": {
+        "server_name": "rag",
+        "tool_name": "query_with_generation"
+      }
+    }
+  ]
+}
+```
+
+### RAG Tool Examples
+
+```python
+# Retrieve documents
+result = await agent.invoke({
+    "input": "Find documents about machine learning algorithms"
+})
+
+# Multi-configuration retrieval with fusion
+result = await mcp_service.call_tool(
+    "rag", 
+    "retrieve_multi_config", 
+    {
+        "query": "artificial intelligence",
+        "configuration_names": ["research_papers", "knowledge_base"],
+        "fusion_method": "rrf",
+        "k": 5
+    }
+)
+
+# Generate comprehensive answers
+result = await mcp_service.call_tool(
+    "rag", 
+    "query_with_generation", 
+    {
+        "query": "What are the latest developments in AI?",
+        "configuration_name": "default",
+        "k": 3
+    }
+)
+```
+
+### Testing RAG Integration
+
+```bash
+# Run the RAG MCP example
+python examples/rag_mcp_example.py
+```
+
+This example will:
+- Check RAG service and MCP server health
+- Test document retrieval tools
+- Demonstrate multi-configuration fusion
+- Show agent integration patterns
 
 ## Best Practices
 

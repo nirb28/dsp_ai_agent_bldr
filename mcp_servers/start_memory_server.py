@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 # Add the memory server directory to Python path
-memory_server_dir = Path(__file__).parent / "memory-server"
+memory_server_dir = Path(__file__).parent / "memory_server"
 sys.path.insert(0, str(memory_server_dir))
 
 if __name__ == "__main__":

@@ -29,17 +29,18 @@ if __name__ == "__main__":
     print("=" * 50)
     
     servers = [
-        ("start_weather_server.py", "Weather Server"),
-        ("start_memory_server.py", "Memory Server"),
-        ("start_calculator_server.py", "Calculator Server")
+        {"name": "weather", "port": 8002, "script": "start_weather_server.py"},
+        {"name": "memory", "port": 8003, "script": "start_memory_server.py"},
+        {"name": "calculator", "port": 8004, "script": "start_calculator_server.py"},
+        {"name": "rag", "port": 8005, "script": "start_rag_server.py"}
     ]
     
     processes = []
     
-    for script, name in servers:
-        process = start_server(script, name)
+    for server in servers:
+        process = start_server(server["script"], server["name"].capitalize() + " Server")
         if process:
-            processes.append((process, name))
+            processes.append((process, server["name"].capitalize() + " Server"))
     
     print("\n" + "=" * 50)
     print(f"Started {len(processes)} MCP servers")
@@ -47,6 +48,7 @@ if __name__ == "__main__":
     print("- Weather Server: http://localhost:8002")
     print("- Memory Server: http://localhost:8003")
     print("- Calculator Server: http://localhost:8004")
+    print("- RAG Server: http://localhost:8005")
     
     print("\nPress Ctrl+C to stop all servers...")
     

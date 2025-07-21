@@ -7,7 +7,7 @@ import os
 from pathlib import Path
 
 # Add the weather server directory to Python path
-weather_server_dir = Path(__file__).parent / "weather-server"
+weather_server_dir = Path(__file__).parent / "weather_server"
 sys.path.insert(0, str(weather_server_dir))
 
 if __name__ == "__main__":
